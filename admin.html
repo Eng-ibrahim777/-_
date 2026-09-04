@@ -1,0 +1,298 @@
+<!-- admin.html -->
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>أزياء الدكتور | لوحة الإدارة</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="admin.css">
+</head>
+
+<body>
+
+<header class="admin-header">
+
+    <div>
+        <h2>⚙️ لوحة إدارة أزياء الدكتور</h2>
+        <span>إدارة المتجر والطلبات</span>
+    </div>
+
+    <a href="index.html">🛍️ المتجر</a>
+
+</header>
+
+<div class="dashboard">
+
+    <div class="stats">
+
+        <div class="stat">
+            <span>📦 المنتجات</span>
+            <b id="stat-products">0</b>
+        </div>
+
+        <div class="stat">
+            <span>🛒 الطلبات</span>
+            <b id="stat-orders">0</b>
+        </div>
+
+        <div class="stat">
+            <span>💰 المبيعات</span>
+            <b id="stat-sales">0</b>
+        </div>
+
+        <div class="stat">
+            <span>🆕 الطلبات الجديدة</span>
+            <b id="stat-new">0</b>
+        </div>
+
+    </div>
+
+    <section class="admin-card">
+
+        <h2>➕ إضافة منتج</h2>
+
+        <form id="product-form">
+
+            <input type="hidden" id="edit-id">
+
+            <div class="form-grid">
+
+                <div>
+                    <label>اسم المنتج</label>
+                    <input id="product-title" required>
+                </div>
+
+                <div>
+                    <label>نوع المنتج</label>
+                    <select id="product-type">
+                        <option value="suit">بدلة</option>
+                        <option value="shirt">قميص</option>
+                        <option value="tie">ربطة</option>
+                        <option value="shoes">حذاء</option>
+                        <option value="accessory">إكسسوار</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label>السعر</label>
+                    <input id="product-price" type="number" required>
+                </div>
+
+                <div>
+                    <label>السعر القديم</label>
+                    <input id="product-old-price" type="number">
+                </div>
+
+                <div>
+                    <label>اللون</label>
+                    <input id="product-color">
+                </div>
+
+                <div>
+                    <label>القصة</label>
+                    <select id="product-cut">
+                        <option value="">غير محدد</option>
+                        <option value="italian">إيطالي</option>
+                        <option value="american">أمريكي</option>
+                        <option value="british">بريطاني</option>
+                        <option value="russian">دبل بريستيد</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label>Drop</label>
+                    <select id="product-drop">
+                        <option value="">غير محدد</option>
+                        <option value="4">Drop 4</option>
+                        <option value="6">Drop 6</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label>المخزون</label>
+                    <input id="product-stock" type="number" value="1">
+                </div>
+
+                <div>
+                    <label>القياسات</label>
+                    <input id="product-sizes" placeholder="48,50,52,54">
+                </div>
+
+                <div>
+    <label>صورة المنتج (ملف)</label>
+    <input id="product-image-file" type="file" accept="image/*" style="padding: 6px;">
+    <input type="hidden" id="product-image" required>
+</div>
+
+                <div>
+                    <label>شارة المنتج</label>
+                    <select id="product-badge">
+                        <option value="">بدون</option>
+                        <option value="جديد">جديد</option>
+                        <option value="الأكثر مبيعاً">الأكثر مبيعاً</option>
+                        <option value="مميز">مميز</option>
+                        <option value="عرض خاص">عرض خاص</option>
+                    </select>
+                </div>
+
+            </div>
+
+            <div class="form-group">
+                <label>وصف المنتج</label>
+                <textarea id="product-description"></textarea>
+            </div>
+
+            <div class="form-buttons">
+
+                <button class="save-btn">
+                    💾 حفظ المنتج
+                </button>
+
+                <button
+                    type="button"
+                    class="cancel-btn"
+                    onclick="resetForm()">
+                    إلغاء
+                </button>
+
+            </div>
+
+        </form>
+
+    </section>
+
+    <section class="admin-card">
+        
+
+        <div class="section-title">
+            <h2>📦 المنتجات</h2>
+
+            <input
+                id="admin-search"
+                placeholder="بحث..."
+                oninput="renderAdminProducts()">
+        </div>
+
+        <div
+            id="admin-products"
+            class="admin-products">
+        </div>
+
+    </section>
+<section class="admin-card">
+
+        <div class="section-title">
+            <h2>🛒 طلبات الزبائن</h2>
+            <input
+                type="text"
+                id="order-search-input"
+                placeholder="بحث برقم الطلب (ID) أو اسم الزبون..."
+                oninput="searchOrders()"
+                style="max-width: 300px; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 7px; outline: none;">
+        </div>
+
+        <div class="order-tabs">
+
+        <div class="order-tabs">
+            <button class="tab-btn active" onclick="switchOrderTab('الكل', this)">الكل</button>
+            <button class="tab-btn" onclick="switchOrderTab('جديد', this)">طلبات جديدة</button>
+            <button class="tab-btn" onclick="switchOrderTab('توصيل واستلام', this)">توصيل واستلام</button>
+            <button class="tab-btn" onclick="switchOrderTab('التجهيز والموافقة', this)">التجهيز والموافقة</button>
+            <button class="tab-btn" onclick="switchOrderTab('تسليم لشركة التوصيل', this)">تسليم لشركة التوصيل</button>
+            <button class="tab-btn" onclick="switchOrderTab('بيع داخل المتجر', this)">بيع داخل المتجر</button>
+            <button class="tab-btn" onclick="switchOrderTab('الملغي', this)">الملغي</button>
+        </div>
+
+        <div id="orders-container"></div>
+
+    </section>
+
+</div>
+
+<!-- نافذة تسجيل دخول الأدمن الاحترافية -->
+<div id="auth-modal" class="modal-overlay">
+    <div class="modal-card">
+        <div class="modal-header">
+            <h3>🔒 تسجيل الدخول</h3>
+        </div>
+        <form id="auth-form" onsubmit="handleAdminLogin(event)">
+            <div class="form-group">
+                <label>أدخل كلمة مرور الأدمن:</label>
+                <input type="password" id="admin-pass-input" placeholder="كلمة المرور..." required autofocus>
+            </div>
+            <p id="auth-error-msg" class="auth-error"></p>
+            <div class="form-buttons">
+                <button type="submit" class="save-btn">تأكيد الدخول</button>
+                <button type="button" class="cancel-btn" onclick="cancelAdminLogin()">إلغاء</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- نافذة تعديل الطلب (Modal) -->
+<div id="edit-order-modal" class="modal-overlay">
+    <div class="modal-card">
+        <div class="modal-header">
+            <h3 id="modal-order-title">✏️ تعديل الطلب</h3>
+            <button type="button" class="close-modal-btn" onclick="closeOrderModal()">×</button>
+        </div>
+        <form id="edit-order-form" onsubmit="saveModalOrder(event)">
+            <input type="hidden" id="modal-order-id">
+            
+            <div class="form-group">
+                <label>اسم الزبون</label>
+                <input id="modal-customer-name" required>
+            </div>
+
+            <div class="form-group">
+                <label>رقم الهاتف</label>
+                <input id="modal-phone" required>
+            </div>
+
+            <div class="form-group">
+                <label>العنوان</label>
+                <input id="modal-address" required>
+            </div>
+
+            <div class="form-group">
+                <label>المبلغ الإجمالي (د.ع)</label>
+                <input id="modal-total" type="number" required>
+            </div>
+
+            <div class="form-group">
+                <label>ملاحظات التعديل / تفاصيل إضافية</label>
+                <textarea id="modal-notes" placeholder="أدخل أي تعديلات طلبها الزبون..."></textarea>
+            </div>
+
+            <div class="form-buttons">
+                <button type="submit" class="save-btn">💾 حفظ التغييرات</button>
+                <button type="button" class="cancel-btn" onclick="closeOrderModal()">إلغاء</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- شريط الإشعارات الاحترافي (Toast Notification) -->
+<div id="toast-notification" class="toast"></div>
+
+<script src="admin.js"></script>
+<!-- نافذة تأكيد حذف الطلب الاحترافية -->
+<div id="delete-order-modal" class="modal-overlay">
+    <div class="confirm-modal-card">
+        <div class="modal-header" style="border: none; margin-bottom: 0; padding-bottom: 0;">
+            <h3 id="delete-modal-title">⚠️ تأكيد الحذف</h3>
+        </div>
+        <p id="delete-modal-text" style="margin-top: 15px;">هل أنت متأكد من حذف هذا الطلب نهائياً؟</p>
+        <div class="confirm-modal-actions" style="margin-top: 20px;">
+            <button type="button" class="danger-btn" id="confirm-delete-order-btn">نعم، حذف</button>
+            <button type="button" class="cancel-btn" onclick="closeDeleteOrderModal()">إلغاء</button>
+        </div>
+    </div>
+</div>
+</body>
+</html>
